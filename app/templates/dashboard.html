@@ -1,0 +1,268 @@
+{% extends "master.html" %}
+
+{% block dashboard %} <a href="{% url 'dashboard' %}" class="nav_link active"> <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Dashboard</span> </a> {% endblock dashboard %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .gender_ratio{
+        margin-top: -100px;
+    }
+</style>
+<h2>Dashboard</h2>
+<div class="row mb-4">
+    <div class="col-xl-4 col-lg-6">
+        <div class="card card-success">
+            <div class="card-block bg-success">
+                <h4 class="text-uppercase">Employees</h4>
+                <h2 class="display-1">{{total_employees}}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <div class="card card-success">
+            <div class="card-block bg-danger">
+                <h4 class="text-uppercase">Trainees</h4>
+                <h2 class="display-1">{{total_trainee}}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <div class="card">
+            <div class="card-block bg-info">
+                <h4 class="text-uppercase">Gender</h4>
+                <div class="col" style="padding: auto; width: 300px; margin-top: -90px; margin-bottom: -65px;">
+                    <canvas id="gender" ></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-xl-4 col-lg-6">
+        <div class="card ">
+            <div class="card-header bg-dark bg-opacity-25">
+                <h4>Employee by Type</h4>
+            </div>
+            <div class="card-body ">
+                <canvas id="emp_type"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 col-lg-6">
+        <div class="card ">
+            <div class="card-header bg-dark bg-opacity-25">
+                <h4>Employee by Position</h4>
+            </div>
+            <div class="card-body ">
+                <canvas id="position"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-xl-8 col-lg-6 mb-4">
+        <div class="card ">
+            <div class="card-header bg-dark bg-opacity-25">
+                <h4> Gender By Position {{total_age_position}}</h4>
+            </div>
+            <div class="card-body ">
+                <canvas id="gender_position"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <div class="card ">
+            <div class="card-header bg-dark bg-opacity-25">
+                <h4>Employee by Status</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="status"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    male = '{{total_male}}'
+    female = '{{total_female}}'
+    trainee = '{{total_trainee}}'
+    senior = '{{total_senior}}'
+    junior = '{{total_junior}}'
+    nss = '{{total_nss}}'
+    sa = '{{total_sa}}'
+    ued = '{{total_ued}}'
+    ds = '{{total_ds}}'
+    da = '{{total_da}}'
+    fulltime = '{{total_full_time}}'
+    parttime = '{{total_part_time}}'
+    temporary = '{{total_temporary}}'
+    seasonal = '{{total_seasonal}}'
+    active = '{{total_active}}'
+    on_leave = '{{total_on_leave}}'
+    suspended = '{{total_suspended}}'
+    terminated = '{{total_terminated}}'
+    male_trainee = '{{total_male_trainee}}'
+    female_trainee = '{{total_female_trainee}}'
+    male_senior = '{{total_male_senior}}'
+    female_senior = '{{total_female_senior}}'
+    male_junior = '{{total_male_junior}}'
+    female_junior = '{{total_female_junior}}'
+    male_nss = '{{total_male_nss}}'
+    female_nss = '{{total_female_nss}}'
+    male_sa = '{{total_male_sa}}'
+    female_sa = '{{total_female_sa}}'
+    male_ued = '{{total_male_ued}}'
+    female_ued = '{{total_female_ued}}'
+    male_ds = '{{total_male_ds}}'
+    female_ds = '{{total_female_ds}}'
+    male_da = '{{total_male_da}}'
+    female_da = '{{total_female_da}}'
+
+    const ctx = document.getElementById('gender').getContext('2d');
+    const gender = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Male',
+                'Female'
+            ],
+            datasets: [{
+                data: [male, female],
+                backgroundColor: [
+                    '#034f84',
+                    '#c94c4c'
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "left",
+                    display: true,
+                    padding: 100
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('emp_type').getContext('2d');
+    const emp_type = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: [
+                'Full-time',
+                'Part-time',
+                'Temporary',
+                'Seasonal'
+            ],
+            datasets: [{
+                data: [fulltime,parttime,temporary,seasonal],
+                backgroundColor: [
+                    '#3e4444',
+                    '#82b74b',
+                    '#405d27',
+                    '#c1946a'
+                ],
+            }]
+        },
+    });
+
+    const ctx1 = document.getElementById('position').getContext('2d');
+    const position = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Trainee',
+                    'Senior Developer',
+                    'Junior Developer',
+                    'Network Support Specialist',
+                    'System Analyst',
+                    'User Experience Designer',
+                    'Data Scientist',
+                    'Database Administrator'],
+            datasets: [{
+                label: '# of Developers',
+                data: [trainee, senior, junior, nss,
+                       sa, ued, ds, da],
+                backgroundColor: [
+                    '#6b5b95',
+                    '#feb236',
+                    '#d64161',
+                    '#ff7b25',
+                    '#a2b9bc',
+                    '#b2ad7f',
+                    '#878f99',
+                    '#6b5b95',
+                ],
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const ctx3 = document.getElementById('status').getContext('2d');
+    const status = new Chart(ctx3, {
+        type: 'polarArea',
+        data: {
+            labels: [
+                'Active',
+                'On-Leave',
+                'Suspended',
+                'Terminated'
+            ],
+            datasets: [{
+                data: [active,on_leave,suspended,terminated],
+                backgroundColor: [
+                    '#7e4a35',
+                    '#cab577',
+                    '#dbceb0',
+                    '#838060'
+                ],
+            }]
+        },
+    });
+    const ctx4 = document.getElementById('gender_position').getContext('2d');
+    const gender_position = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: ['Trainee',
+                    'Senior Developer',
+                    'Junior Developer',
+                    'Network Support Specialist',
+                    'System Analyst',
+                    'User Experience Designer',
+                    'Data Scientist',
+                    'Database Administrator'],
+            datasets: [{
+                label: 'Male',
+                data: [male_trainee, male_senior, male_junior, male_nss,
+                       male_sa, male_ued, male_ds, male_da],
+                backgroundColor: [
+                    '#034f84'
+                ],
+            },
+            {
+                label: 'Female',
+                data: [female_trainee, female_senior, female_junior, female_nss,
+                       female_sa, female_ued, female_ds, female_da],
+                backgroundColor: [
+                    '#c94c4c'
+                ],
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+        background-color: #F7F6FB;}
+    .container-login{
+        height: 100vh;
+    }
+    .container{
+        height: 100%;
+    }
+    .logo_container{
+        background-color: #4723D9;
+    }
+    @media only screen and (max-width: 900px) {
+        .container-login{
+            display: flex;
+            flex-direction: column;
+        }
+        .login_form{
+            flex-grow: 5;
+        }
+        .rounded-circle{
+            width: 5rem;
+        }
+    }
+</style>
+<body>
+    <div class="container-login d-flex">
+        <div class="col login_form d-flex flex-column ">
+            <div class="ps-3 pt-3">
+                <a class="nav-link" href="{% url 'dashboard' %}"> <h3>HR Assistant</h3> </a>
+            </div>
+            <div class="container d-flex justify-content-center align-items-center flex-column">
+                <div>
+                    <center>
+                        <h4>Login</h4>
+                        <p>Please enter your details.</p>
+                    </center>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Username</label>
+                            <input name="username" class="form-control" type="text" placeholder="username">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input name="password" class="form-control" type="password" placeholder="password">
+                        </div>
+                        <center>
+                            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                        </center>
+                    </form>
+                    
+                </div>
+                <div>
+                    {% for message in messages %}
+                        <p>{{message}}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col logo_container d-flex justify-content-center align-items-center">
+            <div class="logo">
+                {% load static %}
+                <a href=""> <img class="rounded-circle" src="{% static "images/HR.png" %}" alt=" hr_logo" width="300px"> </a>    
+            </div>
+        </div>
+    </div>
+</body>
+</html>

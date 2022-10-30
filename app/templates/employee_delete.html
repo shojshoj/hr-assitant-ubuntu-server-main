@@ -1,0 +1,13 @@
+{% extends "master.html" %}
+
+{% block content %}
+
+<p>Are you sure you want to delete "{{ employee.firstname }} {{ employee.lastname }}"</p>
+
+<form action="{% url 'employee_delete' employee.id %}" method="POST">
+    {% csrf_token %}
+    <a class="btn btn-warning " href="{% url 'employee_list' %}">Cancel</a>
+    <input class="btn btn-danger" type="submit" value="Delete">
+</form>
+
+{% endblock %}
